@@ -1670,9 +1670,11 @@ var CanvasGraphics = (function CanvasGraphicsClosure() {
       var ctx = this.ctx;
       // scale the image to the unit square
       ctx.scale(1 / w, -1 / h);
-
-      ctx.drawImage(domImage, 0, 0, domImage.width, domImage.height,
-                    0, -h, w, h);
+      /* Dirty Hack */
+      /*ctx.drawImage(domImage, 0, 0, domImage.width, domImage.height,
+        0, -h, w, h);*/
+      ctx.drawImage(domImage, 0, 0, w / this.ctx.mozCurrentTransformInverse[0], h / this.ctx.mozCurrentTransformInverse[3],
+        0, -h, w, h);
       if (this.imageLayer) {
         var currentTransform = ctx.mozCurrentTransformInverse;
         var position = this.getCanvasPosition(0, 0);
@@ -1786,7 +1788,8 @@ var CanvasGraphics = (function CanvasGraphicsClosure() {
 
       var imgToPaint;
       // instanceof HTMLElement does not work in jsdom node.js module
-      if (imgData instanceof HTMLElement || !imgData.data) {
+      /* Dirty Hack */
+      if (true || imgData instanceof HTMLElement || !imgData.data) {
         imgToPaint = imgData;
       } else {
         var tmpCanvas = CachedCanvases.getCanvas('inlineImage', width, height);
